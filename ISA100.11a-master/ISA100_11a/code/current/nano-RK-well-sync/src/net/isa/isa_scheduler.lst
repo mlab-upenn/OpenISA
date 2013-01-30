@@ -1,0 +1,472 @@
+   1               		.file	"isa_scheduler.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.global __do_copy_data
+   8               		.global __do_clear_bss
+  11               		.text
+  12               	.Ltext0:
+ 133               	.global	isa_set_schedule
+ 135               	isa_set_schedule:
+ 136               		.stabd	46,0,0
+   1:../../../src/net/isa/isa_scheduler.c **** /******************************************************************************
+   2:../../../src/net/isa/isa_scheduler.c **** *  Nano-RK, a real-time operating system for sensor networks.
+   3:../../../src/net/isa/isa_scheduler.c **** *  Copyright (C) 2007, Real-Time and Multimedia Lab, Carnegie Mellon University
+   4:../../../src/net/isa/isa_scheduler.c **** *  All rights reserved.
+   5:../../../src/net/isa/isa_scheduler.c **** *
+   6:../../../src/net/isa/isa_scheduler.c **** *  This is the Open Source Version of Nano-RK included as part of a Dual
+   7:../../../src/net/isa/isa_scheduler.c **** *  Licensing Model. If you are unsure which license to use please refer to:
+   8:../../../src/net/isa/isa_scheduler.c **** *  http://www.nanork.org/nano-RK/wiki/Licensing
+   9:../../../src/net/isa/isa_scheduler.c **** *
+  10:../../../src/net/isa/isa_scheduler.c **** *  This program is free software: you can redistribute it and/or modify
+  11:../../../src/net/isa/isa_scheduler.c **** *  it under the terms of the GNU General Public License as published by
+  12:../../../src/net/isa/isa_scheduler.c **** *  the Free Software Foundation, version 2.0 of the License.
+  13:../../../src/net/isa/isa_scheduler.c **** *
+  14:../../../src/net/isa/isa_scheduler.c **** *  This program is distributed in the hope that it will be useful,
+  15:../../../src/net/isa/isa_scheduler.c **** *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  16:../../../src/net/isa/isa_scheduler.c **** *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  17:../../../src/net/isa/isa_scheduler.c **** *  GNU General Public License for more details.
+  18:../../../src/net/isa/isa_scheduler.c **** *
+  19:../../../src/net/isa/isa_scheduler.c **** *  You should have received a copy of the GNU General Public License
+  20:../../../src/net/isa/isa_scheduler.c **** *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  21:../../../src/net/isa/isa_scheduler.c **** *
+  22:../../../src/net/isa/isa_scheduler.c **** *  Contributing Authors (specific to this file):
+  23:../../../src/net/isa/isa_scheduler.c **** *  Anthony Rowe
+  24:../../../src/net/isa/isa_scheduler.c **** *******************************************************************************/
+  25:../../../src/net/isa/isa_scheduler.c **** 
+  26:../../../src/net/isa/isa_scheduler.c **** 
+  27:../../../src/net/isa/isa_scheduler.c **** #include <isa.h>
+  28:../../../src/net/isa/isa_scheduler.c **** #include <isa_scheduler.h>
+  29:../../../src/net/isa/isa_scheduler.c **** #include <include.h>
+  30:../../../src/net/isa/isa_scheduler.c **** #include <nrk_error.h>
+  31:../../../src/net/isa/isa_scheduler.c **** 
+  32:../../../src/net/isa/isa_scheduler.c **** /* For ISA */
+  33:../../../src/net/isa/isa_scheduler.c **** /* This method is only for demo 1. Need to be updated!! */
+  34:../../../src/net/isa/isa_scheduler.c **** int8_t isa_set_schedule (isa_node_mode_t isa_node_mode, uint8_t clk_src_id)
+  35:../../../src/net/isa/isa_scheduler.c **** {
+ 138               	.LM0:
+ 139               	.LFBB1:
+ 140               	/* prologue: frame size=0 */
+ 141               	/* prologue end (size=0) */
+ 142 0000 782F      		mov r23,r24
+  36:../../../src/net/isa/isa_scheduler.c ****     char i =0;
+  37:../../../src/net/isa/isa_scheduler.c ****     isa_clk_src_id = clk_src_id;//change
+ 144               	.LM1:
+ 145 0002 6093 0000 		sts isa_clk_src_id,r22
+  38:../../../src/net/isa/isa_scheduler.c ****     if (isa_node_mode==ISA_GATEWAY){
+ 147               	.LM2:
+ 148 0006 8230      		cpi r24,lo8(2)
+ 149 0008 01F4      		brne .L2
+  39:../../../src/net/isa/isa_scheduler.c ****         isa_tdma_tx_mask |= ((uint32_t) 1) << 2;
+ 151               	.LM3:
+ 152 000a 8091 0000 		lds r24,isa_tdma_tx_mask
+ 153 000e 9091 0000 		lds r25,(isa_tdma_tx_mask)+1
+ 154 0012 A091 0000 		lds r26,(isa_tdma_tx_mask)+2
+ 155 0016 B091 0000 		lds r27,(isa_tdma_tx_mask)+3
+ 156 001a 8460      		ori r24,lo8(4)
+ 157 001c 8093 0000 		sts isa_tdma_tx_mask,r24
+ 158 0020 9093 0000 		sts (isa_tdma_tx_mask)+1,r25
+ 159 0024 A093 0000 		sts (isa_tdma_tx_mask)+2,r26
+ 160 0028 B093 0000 		sts (isa_tdma_tx_mask)+3,r27
+  40:../../../src/net/isa/isa_scheduler.c **** 	isa_tdma_rx_mask |= ((uint32_t) 1) << 3;//change for test
+ 162               	.LM4:
+ 163 002c 8091 0000 		lds r24,isa_tdma_rx_mask
+ 164 0030 9091 0000 		lds r25,(isa_tdma_rx_mask)+1
+ 165 0034 A091 0000 		lds r26,(isa_tdma_rx_mask)+2
+ 166 0038 B091 0000 		lds r27,(isa_tdma_rx_mask)+3
+ 167 003c 8860      		ori r24,lo8(8)
+ 168 003e 8093 0000 		sts isa_tdma_rx_mask,r24
+ 169 0042 9093 0000 		sts (isa_tdma_rx_mask)+1,r25
+ 170 0046 A093 0000 		sts (isa_tdma_rx_mask)+2,r26
+ 171 004a B093 0000 		sts (isa_tdma_rx_mask)+3,r27
+  41:../../../src/net/isa/isa_scheduler.c **** 	//isa_tdma_tx_mask |= ((uint32_t) 1) << 1;
+  42:../../../src/net/isa/isa_scheduler.c **** 	//isa_tdma_rx_mask |= ((uint32_t) 1) << 4;
+  43:../../../src/net/isa/isa_scheduler.c **** 
+  44:../../../src/net/isa/isa_scheduler.c **** 	//isa_sched[1] = 1;
+  45:../../../src/net/isa/isa_scheduler.c **** 	isa_sched[2] = 1;//change for test
+ 173               	.LM5:
+ 174 004e 81E0      		ldi r24,lo8(1)
+ 175 0050 8093 0000 		sts isa_sched+2,r24
+  46:../../../src/net/isa/isa_scheduler.c **** 	isa_sched[3] = 1;
+ 177               	.LM6:
+ 178 0054 8093 0000 		sts isa_sched+3,r24
+ 179 0058 00C0      		rjmp .L4
+ 180               	.L2:
+  47:../../../src/net/isa/isa_scheduler.c **** 	//isa_sched[4] = 1;
+  48:../../../src/net/isa/isa_scheduler.c ****     }
+  49:../../../src/net/isa/isa_scheduler.c ****     else if (isa_node_mode==ISA_REPEATER){ //change
+ 182               	.LM7:
+ 183 005a 8130      		cpi r24,lo8(1)
+ 184 005c 01F4      		brne .L5
+  50:../../../src/net/isa/isa_scheduler.c ****         isa_tdma_rx_mask |= ((uint32_t) 1) << 2;
+ 186               	.LM8:
+ 187 005e 2091 0000 		lds r18,isa_tdma_rx_mask
+ 188 0062 3091 0000 		lds r19,(isa_tdma_rx_mask)+1
+ 189 0066 4091 0000 		lds r20,(isa_tdma_rx_mask)+2
+ 190 006a 5091 0000 		lds r21,(isa_tdma_rx_mask)+3
+  51:../../../src/net/isa/isa_scheduler.c **** 	isa_tdma_tx_mask |= ((uint32_t) 1) << 3;//change for test
+  52:../../../src/net/isa/isa_scheduler.c **** 	isa_tdma_tx_mask |= ((uint32_t) 1) << 5;
+ 192               	.LM9:
+ 193 006e 8091 0000 		lds r24,isa_tdma_tx_mask
+ 194 0072 9091 0000 		lds r25,(isa_tdma_tx_mask)+1
+ 195 0076 A091 0000 		lds r26,(isa_tdma_tx_mask)+2
+ 196 007a B091 0000 		lds r27,(isa_tdma_tx_mask)+3
+ 197 007e 8862      		ori r24,lo8(40)
+ 198 0080 8093 0000 		sts isa_tdma_tx_mask,r24
+ 199 0084 9093 0000 		sts (isa_tdma_tx_mask)+1,r25
+ 200 0088 A093 0000 		sts (isa_tdma_tx_mask)+2,r26
+ 201 008c B093 0000 		sts (isa_tdma_tx_mask)+3,r27
+  53:../../../src/net/isa/isa_scheduler.c **** 	isa_tdma_rx_mask |= ((uint32_t) 1) << 7;
+ 203               	.LM10:
+ 204 0090 2468      		ori r18,lo8(132)
+ 205 0092 2093 0000 		sts isa_tdma_rx_mask,r18
+ 206 0096 3093 0000 		sts (isa_tdma_rx_mask)+1,r19
+ 207 009a 4093 0000 		sts (isa_tdma_rx_mask)+2,r20
+ 208 009e 5093 0000 		sts (isa_tdma_rx_mask)+3,r21
+  54:../../../src/net/isa/isa_scheduler.c **** 
+  55:../../../src/net/isa/isa_scheduler.c **** 	isa_sched[2] = 1;
+ 210               	.LM11:
+ 211 00a2 7093 0000 		sts isa_sched+2,r23
+  56:../../../src/net/isa/isa_scheduler.c **** 	isa_sched[7] = 1;//change for test
+ 213               	.LM12:
+ 214 00a6 7093 0000 		sts isa_sched+7,r23
+  57:../../../src/net/isa/isa_scheduler.c **** 	isa_sched[5] = 1;
+ 216               	.LM13:
+ 217 00aa 7093 0000 		sts isa_sched+5,r23
+  58:../../../src/net/isa/isa_scheduler.c **** 	isa_sched[3] = 1;
+ 219               	.LM14:
+ 220 00ae 7093 0000 		sts isa_sched+3,r23
+ 221 00b2 00C0      		rjmp .L4
+ 222               	.L5:
+  59:../../../src/net/isa/isa_scheduler.c **** 
+  60:../../../src/net/isa/isa_scheduler.c ****     }
+  61:../../../src/net/isa/isa_scheduler.c ****     else if(isa_node_mode==ISA_RECIPIENT){
+ 224               	.LM15:
+ 225 00b4 8823      		tst r24
+ 226 00b6 01F4      		brne .L4
+  62:../../../src/net/isa/isa_scheduler.c **** 	isa_tdma_tx_mask |= ((uint32_t) 1) << 1;
+ 228               	.LM16:
+ 229 00b8 8091 0000 		lds r24,isa_tdma_tx_mask
+ 230 00bc 9091 0000 		lds r25,(isa_tdma_tx_mask)+1
+ 231 00c0 A091 0000 		lds r26,(isa_tdma_tx_mask)+2
+ 232 00c4 B091 0000 		lds r27,(isa_tdma_tx_mask)+3
+ 233 00c8 8260      		ori r24,lo8(2)
+ 234 00ca 8093 0000 		sts isa_tdma_tx_mask,r24
+ 235 00ce 9093 0000 		sts (isa_tdma_tx_mask)+1,r25
+ 236 00d2 A093 0000 		sts (isa_tdma_tx_mask)+2,r26
+ 237 00d6 B093 0000 		sts (isa_tdma_tx_mask)+3,r27
+  63:../../../src/net/isa/isa_scheduler.c **** 	//isa_tdma_rx_mask |= ((uint32_t) 1) << 1;//change for test
+  64:../../../src/net/isa/isa_scheduler.c **** 	isa_tdma_rx_mask |= ((uint32_t) 1) << 4;
+ 239               	.LM17:
+ 240 00da 8091 0000 		lds r24,isa_tdma_rx_mask
+ 241 00de 9091 0000 		lds r25,(isa_tdma_rx_mask)+1
+ 242 00e2 A091 0000 		lds r26,(isa_tdma_rx_mask)+2
+ 243 00e6 B091 0000 		lds r27,(isa_tdma_rx_mask)+3
+ 244 00ea 8061      		ori r24,lo8(16)
+ 245 00ec 8093 0000 		sts isa_tdma_rx_mask,r24
+ 246 00f0 9093 0000 		sts (isa_tdma_rx_mask)+1,r25
+ 247 00f4 A093 0000 		sts (isa_tdma_rx_mask)+2,r26
+ 248 00f8 B093 0000 		sts (isa_tdma_rx_mask)+3,r27
+  65:../../../src/net/isa/isa_scheduler.c **** 	//isa_tdma_rx_mask |= ((uint32_t) 1) << 0;
+  66:../../../src/net/isa/isa_scheduler.c **** 
+  67:../../../src/net/isa/isa_scheduler.c **** //	isa_sched[0] = 1;
+  68:../../../src/net/isa/isa_scheduler.c **** 	//isa_sched[1] = 1;//change for test
+  69:../../../src/net/isa/isa_scheduler.c **** 	isa_sched[1] = 1;
+ 250               	.LM18:
+ 251 00fc 81E0      		ldi r24,lo8(1)
+ 252 00fe 8093 0000 		sts isa_sched+1,r24
+  70:../../../src/net/isa/isa_scheduler.c **** 	isa_sched[4] = 1;
+ 254               	.LM19:
+ 255 0102 8093 0000 		sts isa_sched+4,r24
+ 256               	.L4:
+  71:../../../src/net/isa/isa_scheduler.c ****     }
+  72:../../../src/net/isa/isa_scheduler.c **** 
+  73:../../../src/net/isa/isa_scheduler.c **** 
+  74:../../../src/net/isa/isa_scheduler.c ****     /*printf("isa_scheduler.h, isa_set_schedule():\n\r");
+  75:../../../src/net/isa/isa_scheduler.c ****     for(i=0;i<25;i++)
+  76:../../../src/net/isa/isa_scheduler.c **** 	printf("%d,",isa_sched[i]);
+  77:../../../src/net/isa/isa_scheduler.c ****     printf("\n\r");*/
+  78:../../../src/net/isa/isa_scheduler.c ****     
+  79:../../../src/net/isa/isa_scheduler.c **** return NRK_OK;
+  80:../../../src/net/isa/isa_scheduler.c **** }
+ 258               	.LM20:
+ 259 0106 81E0      		ldi r24,lo8(1)
+ 260 0108 90E0      		ldi r25,hi8(1)
+ 261               	/* epilogue: frame size=0 */
+ 262 010a 0895      		ret
+ 263               	/* epilogue end (size=1) */
+ 264               	/* function isa_set_schedule size 134 (133) */
+ 266               	.Lscope1:
+ 268               		.stabd	78,0,0
+ 271               	.global	isa_get_schedule
+ 273               	isa_get_schedule:
+ 274               		.stabd	46,0,0
+  81:../../../src/net/isa/isa_scheduler.c **** 
+  82:../../../src/net/isa/isa_scheduler.c **** /**
+  83:../../../src/net/isa/isa_scheduler.c ****  * isa_get_schedule()
+  84:../../../src/net/isa/isa_scheduler.c ****  *
+  85:../../../src/net/isa/isa_scheduler.c ****  * This function returns the stored schedule for a particular slot.
+  86:../../../src/net/isa/isa_scheduler.c ****  * 
+  87:../../../src/net/isa/isa_scheduler.c ****  * Return: schedule value
+  88:../../../src/net/isa/isa_scheduler.c ****  */
+  89:../../../src/net/isa/isa_scheduler.c **** int8_t isa_get_schedule (uint8_t slot)
+  90:../../../src/net/isa/isa_scheduler.c **** {
+ 276               	.LM21:
+ 277               	.LFBB2:
+ 278               	/* prologue: frame size=0 */
+ 279               	/* prologue end (size=0) */
+  91:../../../src/net/isa/isa_scheduler.c ****     if (slot > ISA_SLOTS_PER_FRAME)
+ 281               	.LM22:
+ 282 010c 8A31      		cpi r24,lo8(26)
+ 283 010e 00F0      		brlo .L10
+ 285               	.LM23:
+ 286 0110 8FEF      		ldi r24,lo8(-1)
+ 287 0112 9FEF      		ldi r25,hi8(-1)
+ 288 0114 0895      		ret
+ 289               	.L10:
+  92:../../../src/net/isa/isa_scheduler.c ****         return NRK_ERROR;
+  93:../../../src/net/isa/isa_scheduler.c **** 
+  94:../../../src/net/isa/isa_scheduler.c ****     return isa_sched[slot];
+ 291               	.LM24:
+ 292 0116 E82F      		mov r30,r24
+ 293 0118 FF27      		clr r31
+ 294 011a E050      		subi r30,lo8(-(isa_sched))
+ 295 011c F040      		sbci r31,hi8(-(isa_sched))
+ 296 011e 8081      		ld r24,Z
+ 297 0120 9927      		clr r25
+ 298 0122 87FD      		sbrc r24,7
+ 299 0124 9095      		com r25
+  95:../../../src/net/isa/isa_scheduler.c **** }
+ 301               	.LM25:
+ 302 0126 0895      		ret
+ 303               	/* epilogue: frame size=0 */
+ 304               	/* epilogue: noreturn */
+ 305               	/* epilogue end (size=0) */
+ 306               	/* function isa_get_schedule size 14 (14) */
+ 308               	.Lscope2:
+ 310               		.stabd	78,0,0
+ 312               	.global	_isa_clear_sched_cache
+ 314               	_isa_clear_sched_cache:
+ 315               		.stabd	46,0,0
+  96:../../../src/net/isa/isa_scheduler.c **** 
+  97:../../../src/net/isa/isa_scheduler.c **** /**
+  98:../../../src/net/isa/isa_scheduler.c ****  * _isa_clear_sched_cache()
+  99:../../../src/net/isa/isa_scheduler.c ****  *
+ 100:../../../src/net/isa/isa_scheduler.c ****  * This function is called by the timer interrupt at the
+ 101:../../../src/net/isa/isa_scheduler.c ****  * start of each ISA cycle to remove any cached scheduling
+ 102:../../../src/net/isa/isa_scheduler.c ****  * values.  Only call this if you are reseting the ISA frames.
+ 103:../../../src/net/isa/isa_scheduler.c ****  */
+ 104:../../../src/net/isa/isa_scheduler.c **** void _isa_clear_sched_cache ()
+ 105:../../../src/net/isa/isa_scheduler.c **** {
+ 317               	.LM26:
+ 318               	.LFBB3:
+ 319               	/* prologue: frame size=0 */
+ 320               	/* prologue end (size=0) */
+ 321 0128 E0E0      		ldi r30,lo8(isa_sched)
+ 322 012a F0E0      		ldi r31,hi8(isa_sched)
+ 323               	.L15:
+ 106:../../../src/net/isa/isa_scheduler.c ****     uint8_t i;
+ 107:../../../src/net/isa/isa_scheduler.c **** // FIXME compress this shit later...
+ 108:../../../src/net/isa/isa_scheduler.c ****     for (i = 0; i < ISA_SLOTS_PER_FRAME; i++) {
+ 109:../../../src/net/isa/isa_scheduler.c ****         isa_sched[i] = 0;
+ 325               	.LM27:
+ 326 012c 1192      		st Z+,__zero_reg__
+ 328               	.LM28:
+ 329 012e 80E0      		ldi r24,hi8(isa_sched+25)
+ 330 0130 E030      		cpi r30,lo8(isa_sched+25)
+ 331 0132 F807      		cpc r31,r24
+ 332 0134 01F4      		brne .L15
+ 333               	/* epilogue: frame size=0 */
+ 334 0136 0895      		ret
+ 335               	/* epilogue end (size=1) */
+ 336               	/* function _isa_clear_sched_cache size 8 (7) */
+ 338               	.Lscope3:
+ 340               		.stabd	78,0,0
+ 343               	.global	isa_get_slots_until_next_wakeup
+ 345               	isa_get_slots_until_next_wakeup:
+ 346               		.stabd	46,0,0
+ 110:../../../src/net/isa/isa_scheduler.c ****     }
+ 111:../../../src/net/isa/isa_scheduler.c **** }
+ 112:../../../src/net/isa/isa_scheduler.c **** 
+ 113:../../../src/net/isa/isa_scheduler.c **** 
+ 114:../../../src/net/isa/isa_scheduler.c **** /**
+ 115:../../../src/net/isa/isa_scheduler.c ****  * isa_get_slots_until_next_wakeup()
+ 116:../../../src/net/isa/isa_scheduler.c ****  *
+ 117:../../../src/net/isa/isa_scheduler.c ****  * This function returns the absolute number of slots between the current_slot
+ 118:../../../src/net/isa/isa_scheduler.c ****  * and the next RX/TX related wakeup.  It uses an internal cache to allow for
+ 119:../../../src/net/isa/isa_scheduler.c ****  * faster computation.
+ 120:../../../src/net/isa/isa_scheduler.c ****  *
+ 121:../../../src/net/isa/isa_scheduler.c ****  * Argument: current_slot is the current slot
+ 122:../../../src/net/isa/isa_scheduler.c ****  * Return: uint16_t number of slots until the next wakeup
+ 123:../../../src/net/isa/isa_scheduler.c ****  */
+ 124:../../../src/net/isa/isa_scheduler.c **** uint16_t isa_get_slots_until_next_wakeup (uint16_t current_global_slot)
+ 125:../../../src/net/isa/isa_scheduler.c **** {
+ 348               	.LM29:
+ 349               	.LFBB4:
+ 350               	/* prologue: frame size=0 */
+ 351               	/* prologue end (size=0) */
+ 126:../../../src/net/isa/isa_scheduler.c ****     uint16_t min_slot;
+ 127:../../../src/net/isa/isa_scheduler.c ****     uint8_t test_slot;
+ 128:../../../src/net/isa/isa_scheduler.c ****     uint8_t wrapped_slot;
+ 129:../../../src/net/isa/isa_scheduler.c ****     uint8_t current_local_slot;
+ 130:../../../src/net/isa/isa_scheduler.c ****     
+ 131:../../../src/net/isa/isa_scheduler.c **** //total_slot = (((uint16_t)current_frame)<<5) + current_slot; 
+ 132:../../../src/net/isa/isa_scheduler.c ****     min_slot = ISA_SLOTS_PER_FRAME + 1;
+ 133:../../../src/net/isa/isa_scheduler.c ****     current_local_slot = current_global_slot%25;
+ 353               	.LM30:
+ 354 0138 69E1      		ldi r22,lo8(25)
+ 355 013a 70E0      		ldi r23,hi8(25)
+ 356 013c 0E94 0000 		call __udivmodhi4
+ 357 0140 682F      		mov r22,r24
+ 134:../../../src/net/isa/isa_scheduler.c **** 
+ 135:../../../src/net/isa/isa_scheduler.c ****     //scheduled slot follows current slot
+ 136:../../../src/net/isa/isa_scheduler.c ****     for (test_slot = current_local_slot+1; test_slot < ISA_SLOTS_PER_FRAME; test_slot++) {
+ 359               	.LM31:
+ 360 0142 482F      		mov r20,r24
+ 361 0144 00C0      		rjmp .L23
+ 362               	.L22:
+ 137:../../../src/net/isa/isa_scheduler.c **** 	//printf("isa_sched[%d] is %d.\n\r",test_slot,isa_sched[test_slot]);
+ 138:../../../src/net/isa/isa_scheduler.c ****         if(isa_sched[test_slot]==0) //slot is not scheduled
+ 364               	.LM32:
+ 365 0146 242F      		mov r18,r20
+ 366 0148 3327      		clr r19
+ 367 014a F901      		movw r30,r18
+ 368 014c E050      		subi r30,lo8(-(isa_sched))
+ 369 014e F040      		sbci r31,hi8(-(isa_sched))
+ 370 0150 8081      		ld r24,Z
+ 371 0152 8823      		tst r24
+ 372 0154 01F0      		breq .L23
+ 139:../../../src/net/isa/isa_scheduler.c ****             continue;
+ 140:../../../src/net/isa/isa_scheduler.c **** 	min_slot = test_slot-current_local_slot;
+ 374               	.LM33:
+ 375 0156 C901      		movw r24,r18
+ 376 0158 861B      		sub r24,r22
+ 377 015a 9109      		sbc r25,__zero_reg__
+ 378 015c 0895      		ret
+ 379               	.L23:
+ 381               	.LM34:
+ 382 015e 4F5F      		subi r20,lo8(-(1))
+ 383 0160 4931      		cpi r20,lo8(25)
+ 384 0162 00F0      		brlo .L22
+ 385 0164 20E0      		ldi r18,lo8(0)
+ 386 0166 30E0      		ldi r19,hi8(0)
+ 387               	.L27:
+ 141:../../../src/net/isa/isa_scheduler.c **** 	return min_slot;
+ 142:../../../src/net/isa/isa_scheduler.c ****     }
+ 143:../../../src/net/isa/isa_scheduler.c **** 
+ 144:../../../src/net/isa/isa_scheduler.c ****     // scheduled slot wrapped back
+ 145:../../../src/net/isa/isa_scheduler.c ****     for (test_slot = 0; test_slot<=current_local_slot;test_slot++){ 
+ 146:../../../src/net/isa/isa_scheduler.c **** 	if(isa_sched[test_slot]==0) //slot is not scheduled
+ 389               	.LM35:
+ 390 0168 422F      		mov r20,r18
+ 391 016a 5527      		clr r21
+ 392 016c FA01      		movw r30,r20
+ 393 016e E050      		subi r30,lo8(-(isa_sched))
+ 394 0170 F040      		sbci r31,hi8(-(isa_sched))
+ 395 0172 8081      		ld r24,Z
+ 396 0174 8823      		tst r24
+ 397 0176 01F0      		breq .L28
+ 147:../../../src/net/isa/isa_scheduler.c ****             continue;
+ 148:../../../src/net/isa/isa_scheduler.c **** 	min_slot = (ISA_SLOTS_PER_FRAME - current_local_slot + test_slot);
+ 399               	.LM36:
+ 400 0178 89E1      		ldi r24,lo8(25)
+ 401 017a 90E0      		ldi r25,hi8(25)
+ 402 017c 861B      		sub r24,r22
+ 403 017e 9109      		sbc r25,__zero_reg__
+ 404 0180 840F      		add r24,r20
+ 405 0182 951F      		adc r25,r21
+ 406 0184 0895      		ret
+ 407               	.L28:
+ 149:../../../src/net/isa/isa_scheduler.c **** 	return min_slot;
+ 409               	.LM37:
+ 410 0186 2F5F      		subi r18,lo8(-(1))
+ 411 0188 3F4F      		sbci r19,hi8(-(1))
+ 413               	.LM38:
+ 414 018a 6217      		cp r22,r18
+ 415 018c 00F4      		brsh .L27
+ 150:../../../src/net/isa/isa_scheduler.c ****     }
+ 151:../../../src/net/isa/isa_scheduler.c **** }
+ 417               	.LM39:
+ 418 018e 0895      		ret
+ 419               	/* epilogue: frame size=0 */
+ 420               	/* epilogue: noreturn */
+ 421               	/* epilogue end (size=0) */
+ 422               	/* function isa_get_slots_until_next_wakeup size 44 (44) */
+ 429               	.Lscope4:
+ 431               		.stabd	78,0,0
+ 432               		.comm _nrk_signal_list,4,1
+ 433               		.comm isa_sched,25,1
+ 434               		.comm isa_tdma_rx_mask,4,1
+ 435               		.comm isa_tdma_tx_mask,4,1
+ 436               		.comm nrk_idle_task_stk,128,1
+ 437               		.comm nrk_kernel_stk_ptr,2,1
+ 438               		.comm isa_id,1,1
+ 439               		.comm isa_clk_src_id,1,1
+ 440               		.comm tx_slot_from_join,4,1
+ 441               		.comm isa_rx_data_ready,4,1
+ 442               		.comm isa_tx_data_ready,4,1
+ 443               		.comm child_list,4,1
+ 444               		.comm DHDR,1,1
+ 445               		.comm last_slot,2,1
+ 446               		.comm resync_times,2,1
+ 447               		.comm isa_tx_info,100,1
+ 448               		.comm isa_param,9,1
+ 449               		.comm isa_node_mode,1,1
+ 450               		.comm isa_task,35,1
+ 451               		.comm isa_task_stack,128,1
+ 452               		.comm isa_rfRxInfo,9,1
+ 453               		.comm isa_ack_tx,7,1
+ 454               		.comm isa_ack_buf,4,1
+ 455               		.comm isa_rfTxInfo,7,1
+ 456               		.comm _isa_ready,1,1
+ 457               		.comm _isa_join_ok,1,1
+ 458               		.comm error_task,1,1
+ 459               		.comm error_num,1,1
+ 489               	.Letext0:
+ 490               	/* File "../../../src/net/isa/isa_scheduler.c": code  200 = 0x00c8 ( 198), prologues   0, epilogues
+DEFINED SYMBOLS
+                            *ABS*:00000000 isa_scheduler.c
+     /tmp/cceCM8zJ.s:2      *ABS*:0000003f __SREG__
+     /tmp/cceCM8zJ.s:3      *ABS*:0000003e __SP_H__
+     /tmp/cceCM8zJ.s:4      *ABS*:0000003d __SP_L__
+     /tmp/cceCM8zJ.s:5      *ABS*:00000000 __tmp_reg__
+     /tmp/cceCM8zJ.s:6      *ABS*:00000001 __zero_reg__
+     /tmp/cceCM8zJ.s:135    .text:00000000 isa_set_schedule
+                            *COM*:00000001 isa_clk_src_id
+                            *COM*:00000004 isa_tdma_tx_mask
+                            *COM*:00000004 isa_tdma_rx_mask
+                            *COM*:00000019 isa_sched
+     /tmp/cceCM8zJ.s:273    .text:0000010c isa_get_schedule
+     /tmp/cceCM8zJ.s:314    .text:00000128 _isa_clear_sched_cache
+     /tmp/cceCM8zJ.s:345    .text:00000138 isa_get_slots_until_next_wakeup
+                            *COM*:00000004 _nrk_signal_list
+                            *COM*:00000080 nrk_idle_task_stk
+                            *COM*:00000002 nrk_kernel_stk_ptr
+                            *COM*:00000001 isa_id
+                            *COM*:00000004 tx_slot_from_join
+                            *COM*:00000004 isa_rx_data_ready
+                            *COM*:00000004 isa_tx_data_ready
+                            *COM*:00000004 child_list
+                            *COM*:00000001 DHDR
+                            *COM*:00000002 last_slot
+                            *COM*:00000002 resync_times
+                            *COM*:00000064 isa_tx_info
+                            *COM*:00000009 isa_param
+                            *COM*:00000001 isa_node_mode
+                            *COM*:00000023 isa_task
+                            *COM*:00000080 isa_task_stack
+                            *COM*:00000009 isa_rfRxInfo
+                            *COM*:00000007 isa_ack_tx
+                            *COM*:00000004 isa_ack_buf
+                            *COM*:00000007 isa_rfTxInfo
+                            *COM*:00000001 _isa_ready
+                            *COM*:00000001 _isa_join_ok
+                            *COM*:00000001 error_task
+                            *COM*:00000001 error_num
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss
+__udivmodhi4
