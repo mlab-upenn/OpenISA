@@ -1,1 +1,1 @@
-Mulay sucks!
+Open ISA
